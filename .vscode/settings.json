@@ -1,0 +1,12 @@
+{
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "files.associations": {
+    "string.h": "c",
+    "freertos.h": "c",
+    "gpio.h": "c",
+    "timer.h": "c",
+    "freertosconfig.h": "c",
+    "esp_intr_alloc.h": "c",
+    "timers.h": "c"
+  }
+}

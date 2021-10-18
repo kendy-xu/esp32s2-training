@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"string.h": "c",
+			"freertos.h": "c",
+			"gpio.h": "c",
+			"timer.h": "c",
+			"freertosconfig.h": "c",
+			"esp_intr_alloc.h": "c",
+			"timers.h": "c",
+			"include.h": "c",
+			"uart_ll.h": "c",
+			"uart_periph.h": "c",
+			"mcpwm_periph.h": "c",
+			"mcpwm_reg.h": "c",
+			"mcpwm_struct.h": "c"
+		}
+	}
+}
