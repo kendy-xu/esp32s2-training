@@ -98,7 +98,7 @@ typedef struct{
 	void* ptrToData;
 }adc_items_t;
 
-#define EE_ADDR 0x50
+#define EE_ADDR_MAX 0xA0
 
 
 void Fvt_Gpio_init(void);

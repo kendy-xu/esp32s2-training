@@ -546,9 +546,10 @@ void FVT_Command_handler(char* p_cmd, char* p_target, char* p_value)
         //printf("string length:%d ee_address: %d 0x%02x\n", strlen(target_buf), ee_address, ee_address);
         
         int len = strlen(value_buf);
+        uint16_t num = 0;
         if(len){
             uint8_t array_tmp[len];
-            uint16_t num = StringToHexByte(value_buf, array_tmp);
+            num = StringToHexByte(value_buf, array_tmp);
             printf("array_temp items:%d \n", num);   
             //uart_write_bytes(EX_UART_NUM, value_buf, len);          
             char tmp_str[4];
@@ -564,15 +565,16 @@ void FVT_Command_handler(char* p_cmd, char* p_target, char* p_value)
                 else{
                     uart_write_bytes(EX_UART_NUM, " ", 1);
                 }
-            }            
-        }
-
-        uart_write_bytes(EX_UART_NUM, "\n", 1);
-        
-        if(ee_address == EE_ADDR)
-        {            
-        	b_match = true;
-        	respo_inf = ACK_OK;
+            }  
+            uart_write_bytes(EX_UART_NUM, "\n", 1);        
+            if(ee_address < EE_ADDR_MAX)
+            {            
+                if(num && num < 2){
+        	        b_match = true;
+                    //uint8_t write_data = array_tmp[0];
+        	        respo_inf = ACK_OK;
+                }
+            }
         }
         
         if(b_match == false)
@@ -586,7 +588,7 @@ void FVT_Command_handler(char* p_cmd, char* p_target, char* p_value)
         uint8_t ee_address;        
         StringToHexByte(target_buf, &ee_address);
                         
-        if(ee_address == EE_ADDR)
+        if(ee_address < EE_ADDR_MAX)
         {            
         	b_match = true;
         	//respo_inf = ACK_OK;
