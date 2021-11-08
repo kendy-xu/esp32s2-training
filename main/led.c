@@ -25,49 +25,50 @@ void GPIO_init(const uint16_t GPIO_INDEX,
 	gpio_config_structure.intr_type = GPIO_TYPE;            
 	/* 根据设定参数初始化并使能 */  
 	gpio_config(&gpio_config_structure);
+	
 }
 //================================================================
 
 //================================================================
 void GPIO_LED_init(void)
 {
-	GPIO_init(V6OZ_8OZ_LED_GPIO,      //选择 V6OZ_8OZ_LED_GPIO
-            GPIO_MODE_OUTPUT,        // 输出模式
+	GPIO_init(V6OZ_8OZ_LED_GPIO,       //选择 V6OZ_8OZ_LED_GPIO
+            GPIO_MODE_INPUT_OUTPUT,  // 输入输出模式
 						false,                   // 不上拉
 						false,                   // 不下拉
 						GPIO_PIN_INTR_DISABLE);  // 禁止中断
 	gpio_set_level(V6OZ_8OZ_LED_GPIO, true);//输出高电平
 
-	GPIO_init(V8OZ_10OZ_LED_GPIO,     //选择 V8OZ_10OZ_LED_GPIO
-            GPIO_MODE_OUTPUT,        // 输出模式
+	GPIO_init(V8OZ_10OZ_LED_GPIO,      //选择 V8OZ_10OZ_LED_GPIO
+            GPIO_MODE_INPUT_OUTPUT,  // 输入输出模式
 						false,                   // 不上拉
 						false,                   // 不下拉
 						GPIO_PIN_INTR_DISABLE);  // 禁止中断
 	gpio_set_level(V8OZ_10OZ_LED_GPIO, true);//输出低电平
 
 	GPIO_init(V10OZ_12OZ_LED_GPIO,     //选择 V10OZ_12OZ_LED_GPIO
-            GPIO_MODE_OUTPUT,        // 输出模式
+            GPIO_MODE_INPUT_OUTPUT,  // 输入输出模式
 						false,                   // 不上拉
 						false,                   // 不下拉
 						GPIO_PIN_INTR_DISABLE);  // 禁止中断
 	gpio_set_level(V10OZ_12OZ_LED_GPIO, true);//输出低电平
 
 	GPIO_init(DESCALE_LED_GPIO,     //选择 DESCALE_LED_GPIO
-            GPIO_MODE_OUTPUT,        // 输出模式
+            GPIO_MODE_INPUT_OUTPUT,  // 输入输出模式
 						false,                   // 不上拉
 						false,                   // 不下拉
 						GPIO_PIN_INTR_DISABLE);  // 禁止中断
 	gpio_set_level(DESCALE_LED_GPIO, true);//输出低电平
 
 	GPIO_init(ADD_WATER_LED_GPIO,     //选择 ADD_WATER_LED_GPIO
-            GPIO_MODE_OUTPUT,        // 输出模式
+            GPIO_MODE_INPUT_OUTPUT,  // 输入输出模式
 						false,                   // 不上拉
 						false,                   // 不下拉
 						GPIO_PIN_INTR_DISABLE);  // 禁止中断
 	gpio_set_level(ADD_WATER_LED_GPIO, true);//输出低电平
 
 	GPIO_init(CW_ENCODER_LED_GPIO,     //选择 CW_ENCODER_LED_GPIO
-            GPIO_MODE_OUTPUT,        // 输出模式
+            GPIO_MODE_INPUT_OUTPUT,  // 输入输出模式
 						false,                   // 不上拉
 						false,                   // 不下拉
 						GPIO_PIN_INTR_DISABLE);  // 禁止中断

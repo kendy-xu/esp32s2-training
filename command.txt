@@ -1,0 +1,28 @@
+enter fvt mode:????????
+
+DIGIO-LEVEL-SET DIO_0 ~ DIO_11 H/L 
+DIGIO-LEVEL-GET DIO_0 ~ DIO_11
+  		DIO_0  = GPIO_RELAY_PARALLEL,
+ 	 	DIO_1  = GPIO_TRIAC_PARALLEL,
+  		DIO_2  = GPIO_LEDS_SDO_SER_IN,
+  		DIO_3  = GPIO_LEDS_SCK_SRCK,
+  		DIO_4  = GPIO_CWT_LEVEL_PWR,
+  		DIO_5  = GPIO_HWT_LEVEL_PWR,
+  		DIO_6  = GPIO_DOOR_SWITCH,
+  		DIO_7  = GPIO_CW_ENCODER_LED,
+  		DIO_8  = GPIO_CW_ENCODER,
+  		DIO_9  = GPIO_EEPROM_WP,
+  		DIO_10 = GPIO_LEDS_G,
+  		DIO_11 = GPIO_CWT_LED
+
+ADC-GET         ADC_0 ~ ADC_5 
+		ADC_0 = BUTTON1_ADC,
+    		ADC_1 = BUTTON2_ADC,
+    		ADC_2 = PRESSURE_ADC,
+    		ADC_3 = CWT_LEVEL_ADC,
+    		ADC_4 = HWT_NTC_ADC,
+    		ADC_5 = HWT_LEVEL_ADC
+                    
+DIGIO-PWM-SET     PWM_0/1 value:0-1000 (0-air pump, 1-water pump)
+MASTER-RELAY-SET T/F  (T:open F:close)
+EEPROM-WRITE <address> <data>

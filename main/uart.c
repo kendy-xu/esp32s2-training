@@ -1,90 +1,13 @@
 #include "include.h"
-#include "driver/uart.h"
 
-#define EX_UART_NUM UART_NUM_1
-#define TXD_PIN (GPIO_NUM_19)
-#define RXD_PIN (GPIO_NUM_20)
+#define TXD_PIN (GPIO_NUM_19)//(GPIO_NUM_43)//
+#define RXD_PIN (GPIO_NUM_20)//(GPIO_NUM_44)//
 
-#if defined(UART_MOCE_EVENT)
+#if defined(UART_MODE_EVENT)
 static const char *TAG = "uart_events";
 #elif defined(UART_MODE_TASK)
 static const char *TAG = "uart_task";
 #endif
-
-char* set_io_level = "DIGIO-LEVEL-SET";
-char* read_io_level = "DIGIO-LEVEL-GET";
-char* read_adc_value = "ADC-GET";
-
-
-void del_spare_space(char* p_str)
-{
-    uint16_t i = 0;
-    uint16_t j = 0;    
-    while(p_str[j] != '\0')
-    {
-        if(p_str[j] != ' ' || p_str[j+1] != ' ' )
-        {
-            p_str[i] = p_str[j];
-            i++;
-            j++;
-        }
-        else
-        {
-            p_str[i] = p_str[j+1];
-            j++;
-        }
-    }
-
-    if(p_str[i-1] == ' ')
-    {//delete end space
-        p_str[i-1] = '\0';
-        p_str[i] = 0;
-        j = i;
-    }
-    else
-    {
-        p_str[i] = '\0';
-        j = i + 1;
-    }
-
-    if(p_str[0] == ' ')
-    {//delete first space
-        for(i=0; i<j; i++)
-        {
-            p_str[i] = p_str[i+1];
-        }
-    }
-}
-
-void uart1_rx_handler(uint8_t *ptr, uint16_t length)
-{
-    //char* set_io_h = "Hello, world!";
-    uint16_t len;
-    char* ack = "ACK";
-    len = length+1;
-    char str_rx[len];
-    uint16_t i;
-    for(i=0; i<length; i++)
-    {
-        str_rx[i] = *ptr++;        
-    }
-
-    str_rx[length] = '\0';
-
-    del_spare_space(str_rx);
-                         
-    if(strcmp(set_io_level, str_rx) == 0)
-    {
-        ESP_LOGI(TAG, "UART[%d] DATA TX: %d bytes", EX_UART_NUM, sizeof(ack)-1);
-        uart_write_bytes(EX_UART_NUM, ack, sizeof(ack)-1);                
-        printf("Uart1 send ack. \n");
-    }
-    else
-    {
-        uart_write_bytes(EX_UART_NUM, str_rx, strlen(str_rx));//sizeof(str_rx)-1);//
-        ESP_LOGI(TAG, "UART[%d] DATA TX: %d bytes", EX_UART_NUM, strlen(str_rx));//sizeof(str_rx)-1);//
-    }    
-}
 
 #if defined(UART_MODE_ISR)
 static const int RX_BUF_SIZE = 128;
@@ -120,7 +43,7 @@ void uart_init(void)
 {
     //串口基本参数的配置
     const uart_config_t uart_config = {
-        .baud_rate = 115200,
+        .baud_rate = 9600,//115200,
         .data_bits = UART_DATA_8_BITS,
         .parity = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
@@ -141,7 +64,7 @@ void uart_init(void)
     uart_enable_rx_intr(EX_UART_NUM);
     uart_set_rx_timeout(EX_UART_NUM,10); //配置接收超时中断时间，单位为按照当前波特率传输1个bytes的时间
 }
-#elif defined(UART_MOCE_EVENT)
+#elif defined(UART_MODE_EVENT)
 #define PATTERN_CHR_NUM    (3)         /*!< Set the number of consecutive and identical characters received by receiver which defines a UART pattern*/
 #define BUF_SIZE (1024)
 #define RD_BUF_SIZE (BUF_SIZE)
@@ -154,7 +77,7 @@ void uart_init(void)
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
     uart_config_t uart_config = {
-        .baud_rate = 115200,
+        .baud_rate = 9600, //115200,
         .data_bits = UART_DATA_8_BITS,
         .parity = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1,
@@ -187,18 +110,18 @@ static void uart_event_task(void *pvParameters)
         if(xQueueReceive(uart1_queue, (void * )&event, (portTickType)portMAX_DELAY)) 
         {
             bzero(dtmp, RD_BUF_SIZE);
-            ESP_LOGI(TAG, "uart[%d] event:", EX_UART_NUM);
+            //ESP_LOGI(TAG, "uart[%d] event:", EX_UART_NUM);
             switch(event.type) {
                 //Event of UART receving data
                 /*We'd better handler data event fast, there would be much more data events than
                 other types of events. If we take too much time on data event, the queue might
                 be full.*/
                 case UART_DATA:
-                    ESP_LOGI(TAG, "UART[%d] DATA RX: %d bytes", EX_UART_NUM, event.size);
+                    //ESP_LOGI(TAG, "UART[%d] DATA RX: %d bytes", EX_UART_NUM, event.size);
                     uart_read_bytes(EX_UART_NUM, dtmp, event.size, portMAX_DELAY);
                     //ESP_LOGI(TAG, "UART[%d] DATA TX: %d bytes", EX_UART_NUM, event.size);
                     //uart_write_bytes(EX_UART_NUM, (const char*) dtmp, event.size);
-                    uart1_rx_handler(dtmp, event.size);
+                    FVT_ReceDataHandler(dtmp, event.size);
                     break;
                 //Event of HW FIFO overflow detected
                 case UART_FIFO_OVF:
@@ -313,7 +236,7 @@ static void rx_task(void *arg)
             data[rxBytes] = 0;
             ESP_LOGI(RX_TASK_TAG, "Read %d bytes: '%s'", rxBytes, data);
             ESP_LOG_BUFFER_HEXDUMP(RX_TASK_TAG, data, rxBytes, ESP_LOG_INFO);
-            uart1_rx_handler(data, rxBytes);
+            FVT_ReceDataHandler(data, rxBytes);
         }
     }
     free(data);
@@ -327,9 +250,9 @@ void Creat_uart_task(void)
     
     #if defined(UART_MODE_ISR) 
 
-    #elif defined(UART_MOCE_EVENT)    
+    #elif defined(UART_MODE_EVENT)    
     //Create a task to handler UART event from ISR
-    xTaskCreate(uart_event_task, "uart_event_task", 2048, NULL, 12, NULL);
+    xTaskCreate(uart_event_task, "uart_event_task", 1024*3, NULL, 12, NULL);
     #elif defined(UART_MODE_TASK)
     xTaskCreate(rx_task, "uart_rx_task", 1024*2, NULL, configMAX_PRIORITIES, NULL);
     //xTaskCreate(tx_task, "uart_tx_task", 1024*2, NULL, configMAX_PRIORITIES-1, NULL);

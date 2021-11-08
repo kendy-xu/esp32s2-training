@@ -57,6 +57,13 @@ void GPIO_Key_init(void)
 	gpio_config_structure.intr_type = GPIO_PIN_INTR_DISABLE;         /* 禁止中断 */ 	
 	/* 根据设定参数初始化并使能 */  
 	gpio_config(&gpio_config_structure);
+	
+	GPIO_init(DOOR_SW_GPIO,            //选择 DOOR_SW_GPIO
+        	  GPIO_MODE_INPUT,         // 输入模式          
+			  true,                    // 上拉
+			  false,                   // 不下拉
+			  GPIO_PIN_INTR_DISABLE);  // 禁止中断
+
 }
 //================================================================
 
@@ -180,7 +187,7 @@ void KEY_Scan_Timer_Callback(TimerHandle_t xTimer)
 		button6_8oz.releaseFlag = false;
 		printf("6oz_8oz button has pressed and release %d times. \n", button6_8oz.Counter);
 		CloseLedTimer();	
-		ledc_Channel_SetDuty(0);	
+		ledc_Channel_SetDuty(11435, GPIO_AIR_PUMP_PWM, LEDC_CHANNEL_0, 0);	
 	}
 
 	if(button8_10oz.releaseFlag == true)
@@ -189,7 +196,7 @@ void KEY_Scan_Timer_Callback(TimerHandle_t xTimer)
 		button8_10oz.releaseFlag = false;
 		printf("8oz_10oz button has pressed and release %d times. \n", button8_10oz.Counter);		
 		OpenLedTimer();		
-		ledc_Channel_SetDuty(80);
+		ledc_Channel_SetDuty(11435, GPIO_AIR_PUMP_PWM, LEDC_CHANNEL_0, 80);
 	}
 
 	if(button10_12oz.releaseFlag == true)
@@ -198,7 +205,7 @@ void KEY_Scan_Timer_Callback(TimerHandle_t xTimer)
 		button10_12oz.releaseFlag = false;
 		printf("10oz_12oz button has pressed and release %d times. \n", button10_12oz.Counter);
 		On_Off_Led();
-		ledc_Channel_SetDuty(60);
+		ledc_Channel_SetDuty(11435, GPIO_AIR_PUMP_PWM, LEDC_CHANNEL_0, 60);
 	}
 }
 //================================================================

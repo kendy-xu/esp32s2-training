@@ -3,7 +3,7 @@
 
 
 void ledc_pwm_init(void);
-void ledc_Channel_SetDuty(uint8_t percent);
-void ledc_pwm_app(void);
+void ledc_Channel_SetDuty(uint32_t pwm_freq, gpio_num_t gpio, uint8_t ch, uint8_t percent);
+
 
 #endif

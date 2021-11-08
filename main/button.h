@@ -2,6 +2,8 @@
 #define BUTTON_H
 
 //===============================================
+#define DOOR_SW_GPIO     5
+
 #define KEY_6_8OZ_GPIO   6
 #define KEY_8_10OZ_GPIO  7
 #define KEY_10_12OZ_GPIO 8
