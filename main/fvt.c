@@ -580,6 +580,28 @@ void FVT_Command_handler(char* p_cmd, char* p_target, char* p_value)
             respo_inf = PARAMETERS_ERROR;
         }
     }
+    else if(strcmp(cmd_buf , eeprom_read) == 0)
+    {
+        bool b_match = false;
+        uint8_t ee_address;        
+        StringToHexByte(target_buf, &ee_address);
+                        
+        if(ee_address == EE_ADDR)
+        {            
+        	b_match = true;
+        	//respo_inf = ACK_OK;
+            char tmp_str[4];
+            uint8_t ee_data = 0x39;
+            itoa(ee_data, tmp_str, 16);
+            if(strlen(tmp_str) == 1) uart_write_bytes(EX_UART_NUM, "0", 1);
+            uart_write_bytes(EX_UART_NUM, tmp_str, strlen(tmp_str)); 
+        }
+        
+        if(b_match == false)
+        {
+            respo_inf = PARAMETERS_ERROR;
+        }
+    }
 
     cmd_respo_information(respo_inf);
 }
